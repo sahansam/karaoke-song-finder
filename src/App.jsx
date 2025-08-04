@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import Papa from 'papaparse';
-import './App.css';
 
 export default function App() {
   const [songs, setSongs] = useState([]);
@@ -53,10 +52,10 @@ export default function App() {
   };
 
   return (
-    <div className="app-container">
-      <h1 className="title">🎵 Jukebox Bible 🎵</h1>
-      <div className="search-container">
-        <select value={language} onChange={(e) => setLanguage(e.target.value)}>
+    <div style={{ textAlign: 'center', padding: '20px', background: 'linear-gradient(45deg, #7f00ff, #e100ff)', minHeight: '100vh', color: 'white', fontFamily: 'Poppins, sans-serif' }}>
+      <h1 style={{ fontSize: '2.5rem', marginBottom: '20px', textShadow: '2px 2px 8px #000' }}>🎵 Jukebox Bible 🎵</h1>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', justifyContent: 'center', marginBottom: '20px' }}>
+        <select value={language} onChange={(e) => setLanguage(e.target.value)} style={{ padding: '10px', borderRadius: '5px', width: '200px' }}>
           <option value="">Select Language</option>
           {languageOptions.map((lang) => (
             <option key={lang} value={lang}>{lang}</option>
@@ -69,6 +68,7 @@ export default function App() {
           value={singer}
           onChange={(e) => setSinger(e.target.value)}
           list="singer-list"
+          style={{ padding: '10px', borderRadius: '5px', width: '200px' }}
         />
         <datalist id="singer-list">
           {autocomplete(singer, '#Singer').map((name) => (
@@ -82,6 +82,7 @@ export default function App() {
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           list="title-list"
+          style={{ padding: '10px', borderRadius: '5px', width: '200px' }}
         />
         <datalist id="title-list">
           {autocomplete(title, '#Song').map((song) => (
@@ -89,13 +90,13 @@ export default function App() {
           ))}
         </datalist>
 
-        <button onClick={handleSearch}>Search</button>
+        <button onClick={handleSearch} style={{ backgroundColor: '#ff4081', color: 'white', padding: '10px 20px', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>Search</button>
       </div>
 
-      <div className="results-container">
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '15px', justifyContent: 'center' }}>
         {filteredSongs.length > 0 ? (
           filteredSongs.map((song) => (
-            <div key={song['#ID']} className="song-card">
+            <div key={song['#ID']} style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)', padding: '15px', borderRadius: '10px', width: '220px', boxShadow: '0 4px 6px rgba(0,0,0,0.2)' }}>
               <h3>{song['#Song']}</h3>
               <p><strong>Singer:</strong> {song['#Singer']}</p>
               <p><strong>Language:</strong> {song['#Language']}</p>
