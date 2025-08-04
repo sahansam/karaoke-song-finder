@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Papa from 'papaparse';
 import logo from './517800655_25190794110520466_3285837463860725229_n.jpg';
-import { FaFacebook, FaInstagram, FaGoogle } from 'react-icons/fa';
+import { FaFacebook, FaInstagram, FaGoogle } from 'react-icons/fa/index.esm.js';
 
 export default function App() {
   const [page, setPage] = useState('welcome');
