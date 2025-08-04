@@ -5,12 +5,12 @@ import logo from './517800655_25190794110520466_3285837463860725229_n.jpg';
 export default function App() {
   const [page, setPage] = useState('welcome');
   const [songs, setSongs] = useState([]);
-  const [language, setLanguage] = useState('');
+  const [language, setLanguage] = useState('All');
   const [singer, setSinger] = useState('');
   const [title, setTitle] = useState('');
   const [filteredSongs, setFilteredSongs] = useState([]);
 
-  const fixedLanguages = ["Deutsch", "English", "Spanish", "French", "Italian"];
+  const fixedLanguages = ["All", "Deutsch", "English", "Spanish", "French", "Italian"];
 
   React.useEffect(() => {
     fetch('/songs.csv')
@@ -30,7 +30,7 @@ export default function App() {
   React.useEffect(() => {
     let filtered = songs.filter((song) => {
       return (
-        (language ? song['#Language'].toLowerCase() === language.toLowerCase() : true) &&
+        (language !== 'All' ? song['#Language'].toLowerCase() === language.toLowerCase() : true) &&
         (singer ? song['#Singer'].toLowerCase().includes(singer.toLowerCase()) : true) &&
         (title ? song['#Song'].toLowerCase().includes(title.toLowerCase()) : true)
       );
@@ -41,7 +41,7 @@ export default function App() {
   const handleTitleSelect = (selectedTitle) => {
     setTitle(selectedTitle);
     const match = songs.find(
-      (song) => song['#Song'].toLowerCase() === selectedTitle.toLowerCase() && (!language || song['#Language'].toLowerCase() === language.toLowerCase())
+      (song) => song['#Song'].toLowerCase() === selectedTitle.toLowerCase() && (language === 'All' || song['#Language'].toLowerCase() === language.toLowerCase())
     );
     if (match) {
       setSinger(match['#Singer']);
@@ -50,7 +50,7 @@ export default function App() {
 
   const autocomplete = (input, field) => {
     return songs
-      .filter((s) => (language ? s['#Language'].toLowerCase() === language.toLowerCase() : true))
+      .filter((s) => (language !== 'All' ? s['#Language'].toLowerCase() === language.toLowerCase() : true))
       .map((s) => s[field])
       .filter((val, idx, arr) => val && val.toLowerCase().includes(input.toLowerCase()) && arr.indexOf(val) === idx)
       .slice(0, 5);
@@ -73,15 +73,15 @@ export default function App() {
     return (
       <div style={{ textAlign: 'center', padding: '40px', background: 'linear-gradient(45deg, #ff8800, #7f00ff)', minHeight: '100vh', color: 'white' }}>
         <h1>Speisekarte</h1>
-        <p>Sample menu details coming soon...</p>
-        <button onClick={() => setPage('welcome')} style={{ marginTop: '20px', padding: '10px 20px', borderRadius: '5px' }}>Back</button>
+        <p>📜 Menu details coming soon...</p>
+        <button onClick={() => setPage('welcome')} style={{ marginTop: '20px', padding: '10px 20px', borderRadius: '5px' }}>⬅ Back</button>
       </div>
     );
   }
 
   return (
     <div style={{ textAlign: 'center', padding: '20px', background: 'linear-gradient(45deg, #ff8800, #7f00ff)', minHeight: '100vh', color: 'white', fontFamily: 'Poppins, sans-serif' }}>
-      <h1 style={{ fontSize: '2.2rem', marginBottom: '20px', textShadow: '2px 2px 8px #000' }}>🎵 Jukebox Bible 🎵</h1>
+      <h1 style={{ fontSize: '2.2rem', marginBottom: '20px', textShadow: '2px 2px 8px #000' }}>🎤 Karaoke Song Finder 🎤</h1>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', justifyContent: 'center', marginBottom: '20px', width: '100%', maxWidth: '450px', margin: '0 auto' }}>
         <label style={{ width: '100%', textAlign: 'center', fontSize: '0.9rem' }}>Language</label>
         <select value={language} onChange={(e) => setLanguage(e.target.value)} style={{ padding: '8px', borderRadius: '5px', width: '100%', textAlign: 'center' }}>
@@ -123,16 +123,16 @@ export default function App() {
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', alignItems: 'center', maxHeight: '350px', overflowY: 'auto', width: '100%', padding: '10px' }}>
         {filteredSongs.length > 0 ? (
-          filteredSongs.map((song) => (
-            <div key={song['#ID']} style={{ backgroundColor: 'rgba(255, 255, 255, 0.15)', padding: '8px', borderRadius: '8px', width: '90%', maxWidth: '350px', boxShadow: '0 3px 5px rgba(0,0,0,0.2)', textAlign: 'center' }}>
-              <p>{song['#Song']} ({song['#Year']}) - {song['#Singer']}</p>
+          filteredSongs.map((song, index) => (
+            <div key={`${song['#ID']}-${index}`} style={{ backgroundColor: 'rgba(255, 255, 255, 0.15)', padding: '8px', borderRadius: '8px', width: '90%', maxWidth: '350px', boxShadow: '0 3px 5px rgba(0,0,0,0.2)', textAlign: 'center' }}>
+              <p>🎶 {song['#Song']} ({song['#Year']}) - {song['#Singer']}</p>
             </div>
           ))
         ) : (
           <p>No songs found. Try adjusting your search.</p>
         )}
       </div>
-      <button onClick={() => setPage('welcome')} style={{ marginTop: '20px', padding: '10px 20px', borderRadius: '5px' }}>Back</button>
+      <button onClick={() => setPage('welcome')} style={{ marginTop: '20px', padding: '10px 20px', borderRadius: '5px' }}>⬅ Back</button>
     </div>
   );
 }
