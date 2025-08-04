@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Papa from 'papaparse';
+import logo from './517800655_25190794110520466_3285837463860725229_n.jpg';
 
 export default function App() {
+  const [page, setPage] = useState('welcome');
   const [songs, setSongs] = useState([]);
   const [language, setLanguage] = useState('');
   const [singer, setSinger] = useState('');
@@ -10,7 +12,7 @@ export default function App() {
 
   const fixedLanguages = ["Deutsch", "English", "Spanish", "French", "Italian"];
 
-  useEffect(() => {
+  React.useEffect(() => {
     fetch('/songs.csv')
       .then((res) => res.text())
       .then((text) => {
@@ -25,15 +27,19 @@ export default function App() {
       });
   }, []);
 
-  useEffect(() => {
-    let filtered = songs.filter((song) => {
-      return (
-        (language ? song['#Language'].toLowerCase() === language.toLowerCase() : true) &&
-        (singer ? song['#Singer'].toLowerCase().includes(singer.toLowerCase()) : true) &&
-        (title ? song['#Song'].toLowerCase().includes(title.toLowerCase()) : true)
-      );
-    });
-    setFilteredSongs(filtered);
+  React.useEffect(() => {
+    if (language) {
+      let filtered = songs.filter((song) => {
+        return (
+          (song['#Language'].toLowerCase() === language.toLowerCase()) &&
+          (singer ? song['#Singer'].toLowerCase().includes(singer.toLowerCase()) : true) &&
+          (title ? song['#Song'].toLowerCase().includes(title.toLowerCase()) : true)
+        );
+      });
+      setFilteredSongs(filtered);
+    } else {
+      setFilteredSongs([]);
+    }
   }, [language, singer, title, songs]);
 
   const handleTitleSelect = (selectedTitle) => {
@@ -48,11 +54,34 @@ export default function App() {
 
   const autocomplete = (input, field) => {
     return songs
-      .filter((s) => (language ? s['#Language'].toLowerCase() === language.toLowerCase() : true))
+      .filter((s) => (language ? s['#Language'].toLowerCase() === language.toLowerCase() : false))
       .map((s) => s[field])
       .filter((val, idx, arr) => val && val.toLowerCase().includes(input.toLowerCase()) && arr.indexOf(val) === idx)
       .slice(0, 5);
   };
+
+  if (page === 'welcome') {
+    return (
+      <div style={{ textAlign: 'center', padding: '40px', background: 'linear-gradient(45deg, #ff8800, #7f00ff)', minHeight: '100vh', color: 'white', fontFamily: 'Poppins, sans-serif' }}>
+        <img src={logo} alt="Jukebox KWH" style={{ width: '250px', marginBottom: '20px', borderRadius: '15px', boxShadow: '0px 4px 10px rgba(0,0,0,0.5)' }} />
+        <h1 style={{ fontSize: '2rem', marginBottom: '30px', textShadow: '2px 2px 8px #000' }}>🎵 Welcome to Jukebox KWH 🎵</h1>
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '20px', flexWrap: 'wrap' }}>
+          <div onClick={() => setPage('menu')} style={{ backgroundColor: 'rgba(255,255,255,0.2)', padding: '20px', borderRadius: '10px', width: '150px', cursor: 'pointer', textAlign: 'center' }}>Speisekarte</div>
+          <div onClick={() => setPage('karaoke')} style={{ backgroundColor: 'rgba(255,255,255,0.2)', padding: '20px', borderRadius: '10px', width: '150px', cursor: 'pointer', textAlign: 'center' }}>Karaoke</div>
+        </div>
+      </div>
+    );
+  }
+
+  if (page === 'menu') {
+    return (
+      <div style={{ textAlign: 'center', padding: '40px', background: 'linear-gradient(45deg, #ff8800, #7f00ff)', minHeight: '100vh', color: 'white' }}>
+        <h1>Speisekarte</h1>
+        <p>Sample menu details coming soon...</p>
+        <button onClick={() => setPage('welcome')} style={{ marginTop: '20px', padding: '10px 20px', borderRadius: '5px' }}>Back</button>
+      </div>
+    );
+  }
 
   return (
     <div style={{ textAlign: 'center', padding: '20px', background: 'linear-gradient(45deg, #ff8800, #7f00ff)', minHeight: '100vh', color: 'white', fontFamily: 'Poppins, sans-serif' }}>
@@ -60,7 +89,7 @@ export default function App() {
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', justifyContent: 'center', marginBottom: '20px', width: '100%', maxWidth: '450px', margin: '0 auto' }}>
         <label style={{ width: '100%', textAlign: 'center', fontSize: '0.9rem' }}>Language</label>
         <select value={language} onChange={(e) => setLanguage(e.target.value)} style={{ padding: '8px', borderRadius: '5px', width: '100%', textAlign: 'center' }}>
-          <option value="">Select a language</option>
+          <option value="" disabled hidden>Select Language</option>
           {fixedLanguages.map((lang) => (
             <option key={lang} value={lang}>{lang}</option>
           ))}
@@ -105,9 +134,10 @@ export default function App() {
             </div>
           ))
         ) : (
-          <p>No songs found. Try adjusting your search.</p>
+          <p>{language ? 'No songs found. Try adjusting your search.' : 'Please select a language to view songs.'}</p>
         )}
       </div>
+      <button onClick={() => setPage('welcome')} style={{ marginTop: '20px', padding: '10px 20px', borderRadius: '5px' }}>Back</button>
     </div>
   );
 }
