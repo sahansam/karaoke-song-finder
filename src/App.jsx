@@ -1,20 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Papa from 'papaparse';
+import csvFile from './songs.csv';
 
 export default function App() {
   const [songs, setSongs] = useState([]);
   const [query, setQuery] = useState('');
-  const [language, setLanguage] = useState('English');
+  const [language, setLanguage] = useState('All');
 
-  const handleFileUpload = (e) => {
-    const file = e.target.files[0];
-    Papa.parse(file, {
-      header: true,
-      complete: (results) => {
-        setSongs(results.data);
-      },
-    });
-  };
+  // Load CSV automatically on app start
+  useEffect(() => {
+    fetch(csvFile)
+      .then((response) => response.text())
+      .then((text) => {
+        Papa.parse(text, {
+          header: true,
+          delimiter: ';',
+          complete: (results) => {
+            const mappedSongs = results.data.map(song => ({
+              ID: song['#ID'],
+              Singer: song['#Singer'],
+              Title: song['#Song'],
+              Year: song['#Year'],
+              Language: song['#Language']
+            }));
+            setSongs(mappedSongs);
+          },
+        });
+      });
+  }, []);
 
   const filteredSongs = songs.filter(song => {
     return (
@@ -23,12 +36,11 @@ export default function App() {
     ) && (song.Language === language || language === 'All');
   });
 
-  const languages = ['All', 'Deutsch', 'English', 'Italian', 'Spanish', 'Turkish', 'French', 'Polish'];
+  const languages = ['All', 'Deutsch', 'English', 'Italianisch', 'Spanisch', 'Turkisch', 'Francesch', 'Polnisch'];
 
   return (
     <div className="app-container" style={{ padding: '20px', fontFamily: 'Arial' }}>
       <h1>Karaoke Song Finder</h1>
-      <input type="file" accept=".csv" onChange={handleFileUpload} />
       <div style={{ marginTop: '10px' }}>
         <input
           type="text"
