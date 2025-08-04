@@ -44,16 +44,6 @@ export default function App() {
     }
   };
 
-  const languageOptions = [
-    'Deutsch',
-    'English',
-    'Italian',
-    'Spanish',
-    'Turkish',
-    'French',
-    'Polish',
-  ];
-
   const autocomplete = (input, field) => {
     return songs
       .filter((s) => (language ? s['#Language'].toLowerCase() === language.toLowerCase() : true))
@@ -64,14 +54,21 @@ export default function App() {
 
   return (
     <div style={{ textAlign: 'center', padding: '20px', background: 'linear-gradient(45deg, #ff8800, #7f00ff)', minHeight: '100vh', color: 'white', fontFamily: 'Poppins, sans-serif' }}>
-      <h1 style={{ fontSize: '2.5rem', marginBottom: '20px', textShadow: '2px 2px 8px #000' }}>🎵 Jukebox Bible 🎵</h1>
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', justifyContent: 'center', marginBottom: '20px' }}>
-        <select value={language} onChange={(e) => setLanguage(e.target.value)} style={{ padding: '10px', borderRadius: '5px', width: '200px' }}>
-          <option value="">Select Language</option>
-          {languageOptions.map((lang) => (
-            <option key={lang} value={lang}>{lang}</option>
+      <h1 style={{ fontSize: '2.2rem', marginBottom: '20px', textShadow: '2px 2px 8px #000' }}>🎵 Jukebox Bible 🎵</h1>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', justifyContent: 'center', marginBottom: '20px', width: '100%', maxWidth: '450px', margin: '0 auto' }}>
+        <input
+          type="text"
+          placeholder="Language..."
+          value={language}
+          onChange={(e) => setLanguage(e.target.value)}
+          list="language-list"
+          style={{ padding: '10px', borderRadius: '5px', width: '100%' }}
+        />
+        <datalist id="language-list">
+          {[...new Set(songs.map((s) => s['#Language']))].map((lang) => (
+            <option key={lang} value={lang} />
           ))}
-        </select>
+        </datalist>
 
         <input
           type="text"
@@ -79,7 +76,7 @@ export default function App() {
           value={title}
           onChange={(e) => handleTitleSelect(e.target.value)}
           list="title-list"
-          style={{ padding: '10px', borderRadius: '5px', width: '200px' }}
+          style={{ padding: '10px', borderRadius: '5px', width: '100%' }}
         />
         <datalist id="title-list">
           {autocomplete(title, '#Song').map((song) => (
@@ -93,7 +90,7 @@ export default function App() {
           value={singer}
           onChange={(e) => setSinger(e.target.value)}
           list="singer-list"
-          style={{ padding: '10px', borderRadius: '5px', width: '200px' }}
+          style={{ padding: '10px', borderRadius: '5px', width: '100%' }}
         />
         <datalist id="singer-list">
           {autocomplete(singer, '#Singer').map((name) => (
