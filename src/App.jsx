@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import Papa from 'papaparse';
-import csvFile from './songs.csv';
 
 export default function App() {
   const [songs, setSongs] = useState([]);
@@ -9,7 +8,7 @@ export default function App() {
 
   // Load CSV automatically on app start
   useEffect(() => {
-    fetch(csvFile)
+    fetch('/songs.csv')
       .then((response) => response.text())
       .then((text) => {
         Papa.parse(text, {
