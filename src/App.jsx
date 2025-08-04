@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
 import Papa from 'papaparse';
 import logo from './517800655_25190794110520466_3285837463860725229_n.jpg';
+import { FaFacebook, FaInstagram, FaGoogle } from 'react-icons/fa';
 
 export default function App() {
   const [page, setPage] = useState('welcome');
   const [songs, setSongs] = useState([]);
-  const [language, setLanguage] = useState('All');
+  const [language, setLanguage] = useState('');
   const [singer, setSinger] = useState('');
   const [title, setTitle] = useState('');
   const [filteredSongs, setFilteredSongs] = useState([]);
 
-  const fixedLanguages = ["All", "Deutsch", "English", "Spanish", "French", "Italian"];
+  const fixedLanguages = ["Deutsch", "English", "Spanish", "French", "Italian"];
 
   React.useEffect(() => {
     fetch('/songs.csv')
@@ -30,7 +31,7 @@ export default function App() {
   React.useEffect(() => {
     let filtered = songs.filter((song) => {
       return (
-        (language !== 'All' ? song['#Language'].toLowerCase() === language.toLowerCase() : true) &&
+        (language ? song['#Language'].toLowerCase() === language.toLowerCase() : false) &&
         (singer ? song['#Singer'].toLowerCase().includes(singer.toLowerCase()) : true) &&
         (title ? song['#Song'].toLowerCase().includes(title.toLowerCase()) : true)
       );
@@ -41,7 +42,7 @@ export default function App() {
   const handleTitleSelect = (selectedTitle) => {
     setTitle(selectedTitle);
     const match = songs.find(
-      (song) => song['#Song'].toLowerCase() === selectedTitle.toLowerCase() && (language === 'All' || song['#Language'].toLowerCase() === language.toLowerCase())
+      (song) => song['#Song'].toLowerCase() === selectedTitle.toLowerCase() && (!language || song['#Language'].toLowerCase() === language.toLowerCase())
     );
     if (match) {
       setSinger(match['#Singer']);
@@ -50,7 +51,7 @@ export default function App() {
 
   const autocomplete = (input, field) => {
     return songs
-      .filter((s) => (language !== 'All' ? s['#Language'].toLowerCase() === language.toLowerCase() : true))
+      .filter((s) => (language ? s['#Language'].toLowerCase() === language.toLowerCase() : false))
       .map((s) => s[field])
       .filter((val, idx, arr) => val && val.toLowerCase().includes(input.toLowerCase()) && arr.indexOf(val) === idx)
       .slice(0, 5);
@@ -65,6 +66,12 @@ export default function App() {
           <div onClick={() => setPage('menu')} style={{ backgroundColor: 'rgba(255,255,255,0.2)', padding: '20px', borderRadius: '10px', width: '150px', cursor: 'pointer', textAlign: 'center' }}>Speisekarte</div>
           <div onClick={() => setPage('karaoke')} style={{ backgroundColor: 'rgba(255,255,255,0.2)', padding: '20px', borderRadius: '10px', width: '150px', cursor: 'pointer', textAlign: 'center' }}>Karaoke</div>
         </div>
+        <div style={{ marginTop: '40px', display: 'flex', justifyContent: 'center', gap: '20px' }}>
+          <a href="https://www.facebook.com/p/JukeboxKwh-61570058221412/" target="_blank" rel="noopener noreferrer" style={{ color: 'white', fontSize: '1.5rem' }}><FaFacebook /></a>
+          <a href="https://www.instagram.com/jukeboxkwh" target="_blank" rel="noopener noreferrer" style={{ color: 'white', fontSize: '1.5rem' }}><FaInstagram /></a>
+          <a href="https://www.google.com/search?q=Jukebox+Reviews" target="_blank" rel="noopener noreferrer" style={{ color: 'white', fontSize: '1.5rem' }}><FaGoogle /></a>
+        </div>
+        <p style={{ marginTop: '15px', fontSize: '0.9rem' }}>Bahnhofspl. 14, 70806 Kornwestheim | Phone: 01520 1521800</p>
       </div>
     );
   }
@@ -85,6 +92,7 @@ export default function App() {
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', justifyContent: 'center', marginBottom: '20px', width: '100%', maxWidth: '450px', margin: '0 auto' }}>
         <label style={{ width: '100%', textAlign: 'center', fontSize: '0.9rem' }}>Language</label>
         <select value={language} onChange={(e) => setLanguage(e.target.value)} style={{ padding: '8px', borderRadius: '5px', width: '100%', textAlign: 'center' }}>
+          <option value="">Select a language</option>
           {fixedLanguages.map((lang) => (
             <option key={lang} value={lang}>{lang}</option>
           ))}
