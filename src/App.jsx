@@ -32,12 +32,17 @@ export default function App() {
       );
     });
     setFilteredSongs(filtered);
-
-    // Autofill singer if song is selected and matches unique singer
-    if (title && filtered.length === 1) {
-      setSinger(filtered[0]['#Singer']);
-    }
   }, [language, singer, title, songs]);
+
+  const handleTitleSelect = (selectedTitle) => {
+    setTitle(selectedTitle);
+    const match = songs.find(
+      (song) => song['#Song'].toLowerCase() === selectedTitle.toLowerCase() && (!language || song['#Language'].toLowerCase() === language.toLowerCase())
+    );
+    if (match) {
+      setSinger(match['#Singer']);
+    }
+  };
 
   const languageOptions = [
     'Deutsch',
@@ -72,7 +77,7 @@ export default function App() {
           type="text"
           placeholder="Song title..."
           value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          onChange={(e) => handleTitleSelect(e.target.value)}
           list="title-list"
           style={{ padding: '10px', borderRadius: '5px', width: '200px' }}
         />
