@@ -28,18 +28,14 @@ export default function App() {
   }, []);
 
   React.useEffect(() => {
-    if (language) {
-      let filtered = songs.filter((song) => {
-        return (
-          (song['#Language'].toLowerCase() === language.toLowerCase()) &&
-          (singer ? song['#Singer'].toLowerCase().includes(singer.toLowerCase()) : true) &&
-          (title ? song['#Song'].toLowerCase().includes(title.toLowerCase()) : true)
-        );
-      });
-      setFilteredSongs(filtered);
-    } else {
-      setFilteredSongs([]);
-    }
+    let filtered = songs.filter((song) => {
+      return (
+        (language ? song['#Language'].toLowerCase() === language.toLowerCase() : true) &&
+        (singer ? song['#Singer'].toLowerCase().includes(singer.toLowerCase()) : true) &&
+        (title ? song['#Song'].toLowerCase().includes(title.toLowerCase()) : true)
+      );
+    });
+    setFilteredSongs(filtered);
   }, [language, singer, title, songs]);
 
   const handleTitleSelect = (selectedTitle) => {
@@ -54,7 +50,7 @@ export default function App() {
 
   const autocomplete = (input, field) => {
     return songs
-      .filter((s) => (language ? s['#Language'].toLowerCase() === language.toLowerCase() : false))
+      .filter((s) => (language ? s['#Language'].toLowerCase() === language.toLowerCase() : true))
       .map((s) => s[field])
       .filter((val, idx, arr) => val && val.toLowerCase().includes(input.toLowerCase()) && arr.indexOf(val) === idx)
       .slice(0, 5);
@@ -89,7 +85,7 @@ export default function App() {
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', justifyContent: 'center', marginBottom: '20px', width: '100%', maxWidth: '450px', margin: '0 auto' }}>
         <label style={{ width: '100%', textAlign: 'center', fontSize: '0.9rem' }}>Language</label>
         <select value={language} onChange={(e) => setLanguage(e.target.value)} style={{ padding: '8px', borderRadius: '5px', width: '100%', textAlign: 'center' }}>
-          <option value="" disabled hidden>Select Language</option>
+          <option value="">All Languages</option>
           {fixedLanguages.map((lang) => (
             <option key={lang} value={lang}>{lang}</option>
           ))}
@@ -130,11 +126,11 @@ export default function App() {
         {filteredSongs.length > 0 ? (
           filteredSongs.map((song) => (
             <div key={song['#ID']} style={{ backgroundColor: 'rgba(255, 255, 255, 0.15)', padding: '8px', borderRadius: '8px', width: '90%', maxWidth: '350px', boxShadow: '0 3px 5px rgba(0,0,0,0.2)', textAlign: 'center' }}>
-              <p>{song['#Song']} ({song['#Year']})</p>
+              <p>{song['#Song']} ({song['#Year']}) - {song['#Singer']}</p>
             </div>
           ))
         ) : (
-          <p>{language ? 'No songs found. Try adjusting your search.' : 'Please select a language to view songs.'}</p>
+          <p>No songs found. Try adjusting your search.</p>
         )}
       </div>
       <button onClick={() => setPage('welcome')} style={{ marginTop: '20px', padding: '10px 20px', borderRadius: '5px' }}>Back</button>
