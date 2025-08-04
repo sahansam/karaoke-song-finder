@@ -12,7 +12,7 @@ export default function App() {
   const [visibleSongs, setVisibleSongs] = useState(10);
   const [showTable, setShowTable] = useState(false);
 
-  const fixedLanguages = ["All", "Deutsch", "English", "Spanish", "French", "Italian"];
+  const fixedLanguages = ["All", "Deutsch", "English", "Spanish", "French", "Italian", "Sinhalese"];
 
   useEffect(() => {
     fetch('/songs.csv')
@@ -67,20 +67,20 @@ export default function App() {
     <button onClick={() => setPage('welcome')} style={{ position: 'fixed', top: '20px', left: '20px', padding: '10px 20px', borderRadius: '5px', background: 'rgba(255,255,255,0.3)', color: 'white', border: 'none', cursor: 'pointer', fontWeight: 'bold' }}>⬅ Back</button>
   );
 
-  if (page === 'welcome') {
-    return (
-      <div style={{ textAlign: 'center', padding: '40px', background: 'linear-gradient(45deg, #ff8800, #7f00ff)', minHeight: '100vh', color: 'white', fontFamily: 'Poppins, sans-serif' }}>
-        <img src={logo} alt="Jukebox KWH" style={{ width: '250px', marginBottom: '20px', borderRadius: '15px', boxShadow: '0px 4px 10px rgba(0,0,0,0.5)' }} />
-        <h1 style={{ fontSize: '2rem', marginBottom: '30px', textShadow: '2px 2px 8px #000' }}>🎵 Welcome to Jukebox KWH 🎵</h1>
-        <div style={{ display: 'flex', justifyContent: 'center', gap: '20px', flexWrap: 'wrap' }}>
-          <div onClick={() => setPage('menu')} style={{ backgroundColor: 'rgba(255,255,255,0.2)', padding: '20px', borderRadius: '10px', width: '150px', cursor: 'pointer', textAlign: 'center' }}>Speisekarte</div>
-          <div onClick={() => setPage('karaoke')} style={{ backgroundColor: 'rgba(255,255,255,0.2)', padding: '20px', borderRadius: '10px', width: '150px', cursor: 'pointer', textAlign: 'center' }}>Karaoke</div>
-          <div onClick={() => setPage('musicquiz')} style={{ backgroundColor: 'rgba(255,255,255,0.2)', padding: '20px', borderRadius: '10px', width: '150px', cursor: 'pointer', textAlign: 'center' }}>Music Quiz</div>
-          <div onClick={() => setPage('credits')} style={{ backgroundColor: 'rgba(255,255,255,0.2)', padding: '20px', borderRadius: '10px', width: '150px', cursor: 'pointer', textAlign: 'center' }}>Credits</div>
-        </div>
+  const WelcomePage = () => (
+    <div style={{ textAlign: 'center', padding: '40px', background: 'linear-gradient(45deg, #ff8800, #7f00ff)', minHeight: '100vh', color: 'white', fontFamily: 'Poppins, sans-serif' }}>
+      <img src={logo} alt="Jukebox KWH" style={{ width: '250px', marginBottom: '20px', borderRadius: '15px', boxShadow: '0px 4px 10px rgba(0,0,0,0.5)' }} />
+      <h1 style={{ fontSize: '2rem', marginBottom: '30px', textShadow: '2px 2px 8px #000' }}>🎵 Welcome to Jukebox KWH 🎵</h1>
+      <div style={{ display: 'flex', justifyContent: 'center', gap: '20px', flexWrap: 'wrap' }}>
+        <div onClick={() => setPage('menu')} style={{ backgroundColor: 'rgba(255,255,255,0.2)', padding: '20px', borderRadius: '10px', width: '150px', cursor: 'pointer', textAlign: 'center' }}>Speisekarte</div>
+        <div onClick={() => setPage('karaoke')} style={{ backgroundColor: 'rgba(255,255,255,0.2)', padding: '20px', borderRadius: '10px', width: '150px', cursor: 'pointer', textAlign: 'center' }}>Karaoke</div>
+        <div onClick={() => setPage('musicquiz')} style={{ backgroundColor: 'rgba(255,255,255,0.2)', padding: '20px', borderRadius: '10px', width: '150px', cursor: 'pointer', textAlign: 'center' }}>Music Quiz</div>
+        <div onClick={() => setPage('credits')} style={{ backgroundColor: 'rgba(255,255,255,0.2)', padding: '20px', borderRadius: '10px', width: '150px', cursor: 'pointer', textAlign: 'center' }}>Credits</div>
       </div>
-    );
-  }
+    </div>
+  );
+
+  if (page === 'welcome') return <WelcomePage />;
 
   if (page === 'menu') {
     return (
@@ -199,3 +199,4 @@ export default function App() {
     </div>
   );
 }
+
