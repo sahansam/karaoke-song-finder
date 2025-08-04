@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import Papa from 'papaparse';
-import './App.css';
 
 export default function App() {
   const [songs, setSongs] = useState([]);
@@ -27,15 +26,16 @@ export default function App() {
   const languages = ['All', 'Deutsch', 'English', 'Italian', 'Spanish', 'Turkish', 'French', 'Polish'];
 
   return (
-    <div className="app-container">
+    <div className="app-container" style={{ padding: '20px', fontFamily: 'Arial' }}>
       <h1>Karaoke Song Finder</h1>
       <input type="file" accept=".csv" onChange={handleFileUpload} />
-      <div>
+      <div style={{ marginTop: '10px' }}>
         <input
           type="text"
           placeholder="Search by title or singer..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
+          style={{ marginRight: '10px', padding: '5px' }}
         />
         <select value={language} onChange={(e) => setLanguage(e.target.value)}>
           {languages.map((lang) => (
@@ -43,10 +43,14 @@ export default function App() {
           ))}
         </select>
       </div>
-      <ul>
-        {filteredSongs.map((song, index) => (
-          <li key={index}>{song.Title} - {song.Singer} ({song.Language})</li>
-        ))}
+      <ul style={{ marginTop: '15px' }}>
+        {filteredSongs.length > 0 ? (
+          filteredSongs.map((song, index) => (
+            <li key={index}>{song.Title} - {song.Singer} ({song.Language})</li>
+          ))
+        ) : (
+          <li>No matching songs found</li>
+        )}
       </ul>
     </div>
   );
