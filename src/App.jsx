@@ -85,26 +85,10 @@ export default function App() {
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', justifyContent: 'center', marginBottom: '20px', width: '100%', maxWidth: '450px', margin: '0 auto' }}>
         <label style={{ width: '100%', textAlign: 'center', fontSize: '0.9rem' }}>Language</label>
         <select value={language} onChange={(e) => setLanguage(e.target.value)} style={{ padding: '8px', borderRadius: '5px', width: '100%', textAlign: 'center' }}>
-          <option value="">All Languages</option>
           {fixedLanguages.map((lang) => (
             <option key={lang} value={lang}>{lang}</option>
           ))}
         </select>
-
-        <label style={{ width: '100%', textAlign: 'center', fontSize: '0.9rem' }}>Song Title</label>
-        <input
-          type="text"
-          placeholder="Start typing song title..."
-          value={title}
-          onChange={(e) => handleTitleSelect(e.target.value)}
-          list="title-list"
-          style={{ padding: '8px', borderRadius: '5px', width: '100%', textAlign: 'center' }}
-        />
-        <datalist id="title-list">
-          {autocomplete(title, '#Song').map((song) => (
-            <option key={song} value={song} />
-          ))}
-        </datalist>
 
         <label style={{ width: '100%', textAlign: 'center', fontSize: '0.9rem' }}>Singer Name</label>
         <input
@@ -118,6 +102,21 @@ export default function App() {
         <datalist id="singer-list">
           {autocomplete(singer, '#Singer').map((name) => (
             <option key={name} value={name} />
+          ))}
+        </datalist>
+
+        <label style={{ width: '100%', textAlign: 'center', fontSize: '0.9rem' }}>Song Title</label>
+        <input
+          type="text"
+          placeholder="Start typing song title..."
+          value={title}
+          onChange={(e) => handleTitleSelect(e.target.value)}
+          list="title-list"
+          style={{ padding: '8px', borderRadius: '5px', width: '100%', textAlign: 'center' }}
+        />
+        <datalist id="title-list">
+          {autocomplete(title, '#Song').map((song) => (
+            <option key={song} value={song} />
           ))}
         </datalist>
       </div>
